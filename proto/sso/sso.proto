@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "yamilov.sso.v1;ssov1";
+
+service Auth{
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc IsAdmin(IsAdminRequest) returns (IsAdminResponse);
+}
+
+message RegisterRequest{
+    string email = 1; //Email of the user to register
+    string password = 2; // Password of the user to register
+}
+message RegisterResponse{
+    int64 user_id = 1; //UserID of the registered user
+}
+message LoginRequest{
+    string email = 1; //Email of the user to login
+    string password = 2; // Password of the user to login
+    int32 app_id = 3; // ID of the app to login to
+}
+message LoginResponse{
+    string token = 1;//Auth token of the logged in user
+}
+message IsAdminRequest{
+    int64 user_id = 1; //User Id to validate
+}
+message IsAdminResponse{
+    bool isAdmin = 1; //Indicates whether the user is an admin
+}
+
+// protoc -I proto proto/sso/sso.proto --go_out=./gen/go/ --go_opt=paths=source_relative --go-grpc_out=./gen/go/ --go-grpc_opt=paths=source_relative
