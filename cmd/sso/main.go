@@ -3,6 +3,8 @@ package main
 import (
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/SaveliiYam/ProtoAPI_Auth/internal/app"
 	"github.com/SaveliiYam/ProtoAPI_Auth/internal/config"
@@ -22,7 +24,13 @@ func main() {
 
 	application := app.New(log, cfg.GRPC.Port, cfg.StoragePath, cfg.TokenTTL)
 
-	application.GRPCSrv.MustRun()
+	go application.GRPCSrv.MustRun()
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
+	<-stop
+	application.GRPCSrv.Stop()
+	log.Info("stop application")
 }
 
 func setupLogger(env string) *slog.Logger {
