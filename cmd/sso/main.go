@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/SaveliiYam/ProtoAPI_Auth/internal/app"
 	"github.com/SaveliiYam/ProtoAPI_Auth/internal/config"
 )
 
@@ -19,6 +20,9 @@ func main() {
 	log := setupLogger(cfg.Env)
 	log.Info("starting application", slog.Any("cfg", cfg))
 
+	application := app.New(log, cfg.GRPC.Port, cfg.StoragePath, cfg.TokenTTL)
+
+	application.GRPCSrv.MustRun()
 }
 
 func setupLogger(env string) *slog.Logger {
