@@ -6,7 +6,6 @@ import (
 
 	ssov1 "github.com/SaveliiYam/ProtoAPI_Auth/gen/go/sso"
 	"github.com/SaveliiYam/ProtoAPI_Auth/internal/services/auth"
-	"github.com/SaveliiYam/ProtoAPI_Auth/internal/storage"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -69,7 +68,7 @@ func (s *serverAPI) IsAdmin(ctx context.Context, req *ssov1.IsAdminRequest) (*ss
 
 	isAdmin, err := s.auth.IsAdmin(ctx, req.GetUserId())
 	if err != nil {
-		if errors.Is(err, storage.ErrUserNotFound) {
+		if errors.Is(err, auth.ErrUserNotFound) {
 			return nil, status.Error(codes.InvalidArgument, "user not found")
 		}
 		return nil, status.Error(codes.Internal, "internal error")
