@@ -1,0 +1,1 @@
+Run `make migrate` to generate db
